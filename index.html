@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pocket Arcade</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="bar"><div class="wrap">
+  <a class="logo" href="./"><i></i>Pocket Arcade</a>
+  <input id="q" type="search" placeholder="Search games" aria-label="Search games">
+</div></div>
+
+<div class="wrap">
+  <section class="hero">
+    <h1>Free games, <span>no fuss.</span></h1>
+    <p>Pick one and play right in your browser. Star the ones you like and they stay at the top.</p>
+  </section>
+  <div class="chips" id="chips"></div>
+  <main class="grid" id="grid" aria-live="polite"></main>
+</div>
+
+<footer><div class="wrap">Pocket Arcade. Some games are made here, others are embedded from their creators' own sites.</div></footer>
+
+<script src="games.js"></script>
+<script>
+  const grid = document.getElementById('grid'), chips = document.getElementById('chips'), q = document.getElementById('q');
+  let favs = new Set();
+  try { favs = new Set(JSON.parse(localStorage.getItem('pa-favs') || '[]')); } catch (e) {}
+  const saveFavs = () => { try { localStorage.setItem('pa-favs', JSON.stringify([...favs])); } catch (e) {} };
+  const cats = ['All', 'Favorites', ...new Set(GAMES.map(g => g.cat))];
+  let cat = 'All';
+
+  function renderChips() {
+    chips.innerHTML = '';
+    cats.forEach(c => {
+      const b = document.createElement('button');
+      b.className = 'chip'; b.textContent = c; b.setAttribute('aria-pressed', c === cat);
+      b.onclick = () => { cat = c; renderChips(); render(); };
+      chips.appendChild(b);
+    });
+  }
+
+  function render() {
+    const term = q.value.trim().toLowerCase();
+    let list = GAMES.filter(g =>
+      (cat === 'All' || (cat === 'Favorites' ? favs.has(g.id) : g.cat === cat)) &&
+      (g.name + ' ' + g.desc).toLowerCase().includes(term));
+    list.sort((a, b) => favs.has(b.id) - favs.has(a.id));
+    grid.innerHTML = '';
+    if (!list.length) { grid.innerHTML = '<p class="empty">Nothing here. Try another search or category.</p>'; return; }
+    list.forEach(g => {
+      const a = document.createElement('a');
+      a.className = 'card'; a.style.setProperty('--tile', g.color);
+      if (g.link) { a.href = g.url; a.target = '_blank'; a.rel = 'noopener noreferrer'; } else a.href = 'play.html?g=' + encodeURIComponent(g.id);
+      const art = document.createElement('div'); art.className = 'art'; art.textContent = g.icon; art.setAttribute('aria-hidden', 'true');
+      const tag = document.createElement('span'); tag.className = 'tag'; tag.textContent = g.cat;
+      const info = document.createElement('div'); info.className = 'info';
+      const h = document.createElement('h2'); h.textContent = g.name;
+      const p = document.createElement('p'); p.textContent = g.desc;
+      info.append(h, p);
+      const f = document.createElement('button');
+      f.className = 'fav'; f.textContent = favs.has(g.id) ? '★' : '☆'; f.setAttribute('aria-label', 'Favorite ' + g.name);
+      f.onclick = e => { e.preventDefault(); e.stopPropagation(); favs.has(g.id) ? favs.delete(g.id) : favs.add(g.id); saveFavs(); render(); };
+      a.append(art, tag, f, info);
+      grid.appendChild(a);
+    });
+  }
+  q.addEventListener('input', render);
+  renderChips(); render();
+</script>
+</body>
+</html>

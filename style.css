@@ -1,0 +1,80 @@
+:root {
+  --paper: #fff6e5;
+  --ink: #17120f;
+  --card: #ffffff;
+  --accent: #ff5a36;
+  --shadow: 5px 5px 0 var(--ink);
+}
+* { box-sizing: border-box; margin: 0; }
+body {
+  background: var(--paper);
+  background-image: radial-gradient(rgba(23,18,15,.12) 1.2px, transparent 1.2px);
+  background-size: 22px 22px;
+  color: var(--ink);
+  font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+  line-height: 1.45;
+  min-height: 100vh;
+}
+a { color: inherit; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+/* top bar */
+.bar { border-bottom: 3px solid var(--ink); background: var(--paper); position: sticky; top: 0; z-index: 10; }
+.bar .wrap { display: flex; align-items: center; gap: 16px; padding-top: 12px; padding-bottom: 12px; }
+.logo { font-weight: 900; font-size: 1.5rem; letter-spacing: -.03em; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+.logo i { display: inline-block; width: 28px; height: 28px; background: var(--accent); border: 3px solid var(--ink); border-radius: 8px; transform: rotate(-8deg); box-shadow: 2px 2px 0 var(--ink); }
+.bar input {
+  margin-left: auto; width: min(320px, 50vw); padding: 10px 14px; font-size: 1rem;
+  border: 3px solid var(--ink); border-radius: 12px; background: #fff; box-shadow: 3px 3px 0 var(--ink);
+}
+.bar input:focus { outline: none; background: #fffbe0; }
+
+/* hero */
+.hero { padding: 40px 0 18px; }
+.hero h1 { font-size: clamp(2.4rem, 8vw, 4.6rem); line-height: .98; font-weight: 900; letter-spacing: -.04em; max-width: 12ch; }
+.hero h1 span { background: var(--accent); color: #fff; padding: 0 .15em; border: 3px solid var(--ink); border-radius: 12px; display: inline-block; transform: rotate(-2deg); box-shadow: var(--shadow); }
+.hero p { margin-top: 16px; max-width: 46ch; font-size: 1.1rem; }
+
+/* chips */
+.chips { display: flex; flex-wrap: wrap; gap: 10px; padding: 14px 0 22px; }
+.chip {
+  font: inherit; font-weight: 800; cursor: pointer; padding: 8px 16px; background: #fff; color: var(--ink);
+  border: 3px solid var(--ink); border-radius: 999px; box-shadow: 3px 3px 0 var(--ink);
+}
+.chip:hover { transform: translate(-1px,-1px); }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+/* grid */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 24px; padding-bottom: 60px; }
+.card {
+  position: relative; background: var(--card); border: 3px solid var(--ink); border-radius: 18px;
+  box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column;
+  text-decoration: none; transition: transform .12s, box-shadow .12s;
+}
+.card:hover { transform: translate(-3px,-3px) rotate(-.6deg); box-shadow: 8px 8px 0 var(--ink); }
+.card .art { height: 130px; display: grid; place-items: center; font-size: 3.8rem; background: var(--tile); border-bottom: 3px solid var(--ink); }
+.card .info { padding: 14px 16px 16px; }
+.card h2 { font-size: 1.25rem; font-weight: 900; }
+.card p { font-size: .92rem; margin-top: 4px; opacity: .8; }
+.tag { position: absolute; top: 10px; left: 10px; background: #fff; border: 2px solid var(--ink); border-radius: 999px; font-size: .72rem; font-weight: 800; padding: 2px 10px; }
+.fav {
+  position: absolute; top: 8px; right: 8px; width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
+  border: 2px solid var(--ink); background: #fff; font-size: 1.2rem; line-height: 1;
+}
+.empty { grid-column: 1/-1; text-align: center; padding: 50px 0; font-weight: 700; }
+footer { border-top: 3px solid var(--ink); padding: 20px 0 28px; font-size: .9rem; background: #fff; }
+
+/* player page */
+.player { padding: 22px 0 50px; }
+.player .head { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 14px; }
+.player h1 { font-size: 1.8rem; font-weight: 900; margin-right: auto; }
+.btn {
+  font: inherit; font-weight: 800; text-decoration: none; cursor: pointer; padding: 9px 16px; background: #fff; color: var(--ink);
+  border: 3px solid var(--ink); border-radius: 12px; box-shadow: 3px 3px 0 var(--ink); display: inline-block;
+}
+.btn:hover { background: #fffbe0; }
+.frame { border: 3px solid var(--ink); border-radius: 18px; box-shadow: var(--shadow); overflow: hidden; background: #000; }
+.frame iframe { display: block; width: 100%; height: min(78vh, 760px); min-height: 460px; border: 0; background: #fff; }
+.note { margin-top: 16px; font-size: .95rem; max-width: 70ch; }
+.more h2 { margin: 36px 0 14px; font-size: 1.4rem; font-weight: 900; }
+.more .grid { padding-bottom: 0; }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Play · Pocket Arcade</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="bar"><div class="wrap"><a class="logo" href="./"><i></i>Pocket Arcade</a><a class="btn" href="./" style="margin-left:auto">← All games</a></div></div>
+
+<div class="wrap player" id="root"></div>
+
+<script src="games.js"></script>
+<script>
+  const root = document.getElementById('root');
+  const id = new URLSearchParams(location.search).get('g');
+  const g = GAMES.find(x => x.id === id);
+
+  if (!g) {
+    root.innerHTML = '<h1>Game not found</h1><p class="note"><a href="./">Back to all games</a></p>';
+  } else {
+    document.title = g.name + ' · Pocket Arcade';
+    const head = document.createElement('div'); head.className = 'head';
+    const h1 = document.createElement('h1'); h1.textContent = g.icon + ' ' + g.name;
+    const full = document.createElement('button'); full.className = 'btn'; full.textContent = 'Fullscreen';
+    const open = document.createElement('a'); open.className = 'btn'; open.href = g.url; open.target = '_blank'; open.rel = 'noopener'; open.textContent = 'Open in new tab';
+    head.append(h1, full, open);
+
+    const frameBox = document.createElement('div'); frameBox.className = 'frame';
+    const f = document.createElement('iframe');
+    f.src = g.url; f.title = g.name; f.allow = 'fullscreen; gamepad; autoplay'; f.allowFullscreen = true;
+    f.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-pointer-lock allow-forms');
+    f.referrerPolicy = 'no-referrer';
+    frameBox.appendChild(f);
+    full.onclick = () => (frameBox.requestFullscreen || frameBox.webkitRequestFullscreen || (() => {})).call(frameBox);
+
+    const note = document.createElement('p'); note.className = 'note';
+    note.textContent = g.desc + (g.own ? '' : ' This game is hosted on its creator\'s own site. If the box above stays blank, use "Open in new tab".');
+
+    const more = document.createElement('section'); more.className = 'more';
+    more.innerHTML = '<h2>More games</h2>';
+    const grid = document.createElement('div'); grid.className = 'grid';
+    GAMES.filter(x => x.id !== g.id).sort(() => Math.random() - .5).slice(0, 4).forEach(x => {
+      const a = document.createElement('a'); a.className = 'card'; a.style.setProperty('--tile', x.color);
+      if (x.link) { a.href = x.url; a.target = '_blank'; a.rel = 'noopener noreferrer'; } else a.href = 'play.html?g=' + encodeURIComponent(x.id);
+      const art = document.createElement('div'); art.className = 'art'; art.textContent = x.icon;
+      const info = document.createElement('div'); info.className = 'info';
+      const h = document.createElement('h2'); h.textContent = x.name; info.appendChild(h);
+      a.append(art, info); grid.appendChild(a);
+    });
+    more.appendChild(grid);
+    root.append(head, frameBox, note, more);
+  }
+</script>
+</body>
+</html>
